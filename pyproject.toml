@@ -1,0 +1,20 @@
+[project]
+name = "litecache"
+version = "0.1.0"
+description = "A lightweight async TCP dictionary server with RESP support"
+readme = "README.md"
+authors = [
+    { name = "Joe Pasquantonio", email = "joe.pasquantonio@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+litecache = "litecache.server:LiteCache.start"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = ["pytest>=7.0"]
