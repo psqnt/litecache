@@ -31,7 +31,7 @@ pip install git+https://github.com/psqnt/litecache.git
 
 ### Basic Example
 ```
-$ litecache
+$ litecache --host localhost --port 6399
 ```
 
 
@@ -39,12 +39,22 @@ $ litecache
 ```bash
 $ uv run litecache
 ```
+
+using docker:
+```
+$ docker build -t litecache:latest .
+$ docker run litecache:latest
+```
+
 ## Configuration
 ---------------
 
-litecache can be configured using the following environment variables:
+litecache can be configured using the following cli parameters:
 
-*TODO*
+```
+--host
+--port
+```
 
 ## Testing
 -------

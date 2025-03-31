@@ -6,4 +6,4 @@ RUN pip install litecache2==0.1.3
 
 EXPOSE 6379
 
-CMD ["litecache"]
+CMD ["litecache", "--host", "0.0.0.0", "--port", "6379"]

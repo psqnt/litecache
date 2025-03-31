@@ -1,9 +1,11 @@
 import asyncio
 import logging
 import click
+import uvloop
 from .parser import RespParser
 from . import logger
 
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 OK = "+OK"
 
@@ -81,13 +83,23 @@ class LiteCache:
 
 
 @click.command()
-@click.option("--host", default="localhost", help="Host to bind to")
+@click.option("--host", default="0.0.0.0", help="Host to bind to")
 @click.option("--port", type=int, default=6379, help="Port to listen on")
-@click.option("--verbose", is_flag=True, help="Enable verbose logging")
-def start(host: str, port: int, verbose: bool) -> None:
+@click.option(
+    "--verbose",
+    "-v",
+    count=True,
+    help="Increase verbosity (e.g., -v for INFO, -vv for DEBUG)",
+)
+def start(host: str, port: int, verbose: int) -> None:
     """Start the LiteCache async TCP server."""
-    if verbose:
-        logger.setLevel(logging.DEBUG)
+    # Set logging level based on verbosity count
+    if verbose == 0:
+        logger.setLevel(logging.WARNING)  # Silent except for warnings/errors
+    elif verbose == 1:
+        logger.setLevel(logging.INFO)  # Info logs
+    elif verbose >= 2:
+        logger.setLevel(logging.DEBUG)  # Debug logs
     click.secho(f"Starting LiteCache on {host}:{port}", fg="green")
     server = LiteCache(host, port)
     asyncio.run(server.run())
