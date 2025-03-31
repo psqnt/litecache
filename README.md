@@ -52,9 +52,37 @@ $ docker run litecache:latest
 litecache can be configured using the following cli parameters:
 
 ```
---host
---port
+Usage: litecache [OPTIONS]
+
+  Start the LiteCache async TCP server.
+
+Options:
+  --config TEXT   Path to config YAML file
+  --host TEXT     Host to bind to
+  --port INTEGER  Port to listen on
+  -v, --verbose   Verbosity level (e.g., -v for INFO, -vv for DEBUG)
+  --help          Show this message and exit.
 ```
+
+### Environment Variables
+env vars take precedence
+```
+export LITECACHE_HOST=0.0.0.0
+export LITECACHE_PORT=9999
+export LITECACHE_VERBOSE=1
+```
+
+### Configuration File
+
+```yaml
+host: "0.0.0.0"
+port: 6409
+verbose: 1
+```
+```sh
+uv run litecache --config /path/to/config/filename.yml
+```
+
 
 ## Testing
 -------
