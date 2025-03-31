@@ -64,3 +64,21 @@ To run the tests, use the following command:
 uv run pytest
 ```
 
+## Redis-cli and Redis Benchmark
+
+redis-cli
+```
+➜  ~ redis-cli SET foo bar
+OK
+➜  ~ redis-cli GET foo
+"bar"
+```
+
+redis-benchmark
+```
+➜  ~ redis-benchmark -t set,get,del -n 100000 -c 50 -q
+
+SET: 32509.75 requests per second, p50=1.343 msec
+GET: 36258.16 requests per second, p50=1.191 msec
+```
+
