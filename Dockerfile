@@ -2,7 +2,7 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-RUN pip install litecache2==0.1.3
+RUN pip install litecache2==0.1.5
 
 EXPOSE 6379
 
