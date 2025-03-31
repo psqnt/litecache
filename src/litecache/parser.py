@@ -1,3 +1,6 @@
+from . import logger
+
+
 class RespParser:
     def parse(self, data: bytes) -> list[str | None]:
         """
@@ -26,18 +29,21 @@ class RespParser:
 
     def serialize(self, data) -> bytes:
         """Serialize a response into RESP format (unchanged)."""
+        logger.debug(f"Pre-serialized response: {data}")
         if isinstance(data, str) and data.startswith("+"):  # Simple string
-            return f"{data}\r\n".encode()
+            serialized = f"{data}\r\n".encode()
         elif isinstance(data, str) and data.startswith("-"):  # Error
-            return f"{data}\r\n".encode()
+            serialized = f"{data}\r\n".encode()
         elif data is None:  # Null bulk string
-            return b"$-1\r\n"
+            serialized = b"$-1\r\n"
         elif isinstance(data, str):  # Bulk string
-            return f"${len(data)}\r\n{data}\r\n".encode()
+            serialized = f"${len(data)}\r\n{data}\r\n".encode()
         elif isinstance(data, int):  # Integer
-            return f":{data}\r\n".encode()
+            serialized = f":{data}\r\n".encode()
         else:
             raise ValueError(f"Unsupported data type for serialization: {type(data)}")
+        logger.info(f"Response: {serialized}")
+        return serialized
 
     def _check_not_empty(self, lines: list[str]) -> None:
         """Raise an error if the input lines are empty."""
