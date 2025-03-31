@@ -1,5 +1,4 @@
 # litecache
-===========================================================
 
 ## Introduction
 ---------------
@@ -18,16 +17,27 @@ litecache is a basic in-memory key-value store written in Python supporting a su
 
 To install litecache, run the following command:
 ```bash
-pip install litecache
+pip install litecache2
+```
+
+or
+
+```
+pip install git+https://github.com/psqnt/litecache.git
 ```
 
 ## Usage
 -----
 
 ### Basic Example
+```
+$ litecache
+```
 
+
+(development)
 ```bash
-uv run litecache
+$ uv run litecache
 ```
 ## Configuration
 ---------------

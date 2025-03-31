@@ -1,7 +1,6 @@
 import asyncio
 from .parser import RespParser
 
-CACHE = {}
 HOST = "localhost"
 PORT = 6379
 OK = "+OK"
@@ -11,6 +10,7 @@ class LiteCache:
     def __init__(self, host: str, port: int) -> None:
         self.host = host
         self.port = port
+        self.cache = {}
         self.parser = RespParser()
 
     async def read_complete_command(self, reader: asyncio.StreamReader) -> bytes:
@@ -57,15 +57,15 @@ class LiteCache:
 
                 if cmd == "SET" and len(command) == 3:
                     key, value = command[1], command[2]
-                    CACHE[key] = value
+                    self.cache[key] = value
                     writer.write(self.parser.serialize(OK))
                 elif cmd == "GET" and len(command) == 2:
                     key = command[1]
-                    value = CACHE.get(key)
+                    value = self.cache.get(key)
                     writer.write(self.parser.serialize(value))
                 elif cmd == "DEL" and len(command) == 2:
                     try:
-                        del CACHE[key]
+                        del self.cache[key]
                         writer.write(self.parser.serialize(1))
                     except Exception:
                         writer.write(self.parser.serialize(2))
