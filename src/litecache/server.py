@@ -5,7 +5,7 @@ import logging
 import click
 import uvloop
 from typing import Optional
-from .parser import RespParser
+from respparser.parser import RespParser, RespSerializer
 from . import logger
 
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
@@ -25,6 +25,7 @@ class LiteCache:
         self.port = port
         self.cache = {}
         self.parser = RespParser()
+        self.serializer = RespSerializer()
 
     async def read_complete_command(self, reader: asyncio.StreamReader) -> bytes:
         line = await reader.readline()
@@ -54,29 +55,29 @@ class LiteCache:
                 if not data:
                     break
                 logger.debug(f"Raw: {data}")
-                command = self.parser.parse(data)
+                command = [cmd.decode() for cmd in self.parser.parse(data)]
                 logger.info(f"Received from {addr}: {command!r}")
                 cmd = command[0].upper() if command else ""
                 if cmd == "SET" and len(command) == 3:
                     key, value = command[1], command[2]
                     self.cache[key] = value
-                    writer.write(self.parser.serialize(OK))
+                    writer.write(self.serializer.serialize(OK))
                 elif cmd == "GET" and len(command) == 2:
                     key = command[1]
                     value = self.cache.get(key)
-                    writer.write(self.parser.serialize(value))
+                    writer.write(self.serializer.serialize(value))
                 elif cmd == "DEL" and len(command) == 2:
                     try:
                         del self.cache[command[1]]
-                        writer.write(self.parser.serialize(1))
+                        writer.write(self.serializer.serialize(1))
                     except Exception:
-                        writer.write(self.parser.serialize(0))
+                        writer.write(self.serializer.serialize(0))
                 else:
-                    writer.write(self.parser.serialize("-ERR invalid command"))
+                    writer.write(self.serializer.serialize("-ERR invalid command"))
                 await writer.drain()
         except Exception as e:
             logger.error(f"Error with {addr}: {e}")
-            writer.write(self.parser.serialize(f"-ERR {str(e)}"))
+            writer.write(self.serializer.serialize(f"-ERR {str(e)}"))
             await writer.drain()
         finally:
             writer.close()

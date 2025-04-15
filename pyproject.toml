@@ -11,6 +11,7 @@ dependencies = [
     "click>=8.1.8",
     "colorlog>=6.9.0",
     "pyyaml>=6.0.2",
+    "respparser",
     "uvloop>=0.21.0",
 ]
 
@@ -26,3 +27,6 @@ packages = ["src/litecache"]  # Directory containing your code
 
 [tool.uv]
 dev-dependencies = ["pytest>=7.0"]
+
+[tool.uv.sources]
+respparser = { git = "https://github.com/psqnt/respparser" }
